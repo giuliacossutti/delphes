@@ -804,6 +804,9 @@ void TreeWriter::ProcessJets(ExRootTreeBranch *branch, TObjArray *array)
 
     entry = static_cast<Jet *>(branch->NewEntry());
 
+    entry->SetBit(kIsReferenced);
+    entry->SetUniqueID(candidate->GetUniqueID());
+
     entry->Eta = eta;
     entry->Phi = momentum.Phi();
     entry->PT = pt;
