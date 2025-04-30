@@ -379,6 +379,8 @@ void  VertexFit::VertexFitter()
 			// Get track helix parameters and their covariance matrix
 			TVectorD par = *fPar[i];
 			TMatrixDSym Cov = *fCov[i];
+			std::cout << "fPar[0]: " << par[0] << std::endl;
+			std::cout << "fCov[0][0]: " << Cov[0][0] << std::endl;
 			//
 			// Update track related arrays
 			//
@@ -395,9 +397,9 @@ void  VertexFit::VertexFitter()
 			TVectorD xs = *fx0i[i] - *fdi[i];
 			//TVectorD xx0 = *fx0i[i];
 			
-			//std::cout << "Iter. " << Ntry << ", trk " << i << ", xs= "
-			//	<< xs(0) << ", " << xs(1) << ", " << xs(2)<<
-			//	", ph0= "<<par(1)<< std::endl;
+			std::cout << "Iter. " << Ntry << ", trk " << i << ", xs= "
+				<< xs(0) << ", " << xs(1) << ", " << xs(2)<<
+				", ph0= "<<par(1)<< std::endl;
 			
 			cterm += Ds * xs;
 		}				// End loop on tracks
@@ -420,13 +422,16 @@ void  VertexFit::VertexFitter()
 		for (Int_t i = 0; i < fNtr; i++)
 		{
 			TVectorD lambda = (*fDi[i]) * (*fx0i[i] - x - *fdi[i]);
+			std::cout<< "lambda: " << lambda[0] << std::endl;
 			TMatrixDSym Wm1 = *fWinvi[i];
+			std::cout<< "Wm1: " << Wm1[0][0] << std::endl;
 			fChi2List(i) = Wm1.Similarity(lambda);
 			if(fChi2List(i) < 0.0){
-				//std::cout<<"# "<<i<<", Chi2= "<<fChi2List(i)<<", Wm1:"<<std::endl; Wm1.Print();
-				//std::cout<<"Lambda= "<<std::endl; lambda.Print();
+				std::cout<<"# "<<i<<", Chi2= "<<fChi2List(i)<<", Wm1:"<<std::endl; Wm1.Print();
+				std::cout<<"Lambda= "<<std::endl; lambda.Print();
 			}
 			Chi2 += fChi2List(i);
+			std::cout << "Added fChi2List(i) : " << fChi2List(i) << std::endl;
 			TVectorD a = *fai[i];
 			TVectorD b = (*fWi[i]) * (x - *fx0i[i] + *fdi[i]);
 			ffi[i] += Dot(a, b) / fa2i[i];
@@ -439,6 +444,7 @@ void  VertexFit::VertexFitter()
 		}
 		// Add external constraint to Chi2
 		if (fVtxCst) Chi2 += fCovCstInv.Similarity(x - fxCst);
+		std::cout << "Added Similarity: " << fCovCstInv.Similarity(x - fxCst) << std::endl;
 		//
 		TVectorD dx = x - x0;
 		x0 = x;
